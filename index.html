@@ -20,9 +20,10 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
-    <script>
+    <script type="module">
         // main.js
         let scene, camera, renderer, model;
+        import { OrbitControls } from 'https://cdn.jsdelivr.net/npm/three@0.124/examples/jsm/controls/OrbitControls.js';
 
         function init() {
             scene = new THREE.Scene();
@@ -42,17 +43,19 @@
             const loader = new THREE.GLTFLoader();
             loader.load('abandoned_mcdonalds.glb', (gltf) => {
                 model = gltf.scene;
-                model.scale.set(10,10,10);
-                model.position.set(0,0,-2)
+                model.scale.set(10, 10, 10);
+                model.position.set(0, 0, 2)
                 scene.add(model);
             }, undefined, (error) => {
                 console.error('Error loading GLB model:', error);
             });
 
-            camera.position.z = 5;
+            camera.position.z = 0;
+            const controls = new OrbitControls(camera, renderer.domElement);
 
             // Optional: Orbit controls
             // const controls = new THREE.OrbitControls(camera, renderer.domElement);
+            controls.update();
 
             animate();
         }
@@ -60,6 +63,8 @@
         function animate() {
             requestAnimationFrame(animate);
             // Update model animations or custom logic here
+            controls.update();
+
             renderer.render(scene, camera);
         }
 
