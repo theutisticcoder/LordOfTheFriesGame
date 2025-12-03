@@ -31,11 +31,11 @@
         }
 
         const UpdateGame = (ts) => {
+        UpdateCamera(&camera, CAMERA_FIRST_PERSON);
         BeginDrawing()
         ClearBackground(RED)
         BeginMode3D(camera);
         DrawModel(model, {0,0,0}, 1, BLACK)
-        UpdateCamera(&camera, CAMERA_FIRST_PERSON);
         EndMode3D()
         DrawFPS(10, 10)
         EndDrawing()
