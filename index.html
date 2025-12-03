@@ -49,7 +49,7 @@
                 console.error('Error loading GLB model:', error);
             });
 
-            controls = new OrbitControls(camera, renderer.domElement);
+            controls = new OrbitControls(camera, model);
             controls.keys = {
                 LEFT: 'ArrowLeft', //left arrow
                 UP: 'ArrowUp', // up arrow
