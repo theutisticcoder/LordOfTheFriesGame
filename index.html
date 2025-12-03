@@ -56,7 +56,8 @@
                 RIGHT: 'ArrowRight', // right arrow
                 BOTTOM: 'ArrowDown' // down arrow
             }
-            modelbox = new THREE.Box3().setFromObject(model);
+            renderer.domElement.geometry.computeBoundingBox();
+            modelbox = new THREE.Box3().setFromObject(renderer.domElement);
 
             // Optional: Orbit controls
             // const controls = new THREE.OrbitControls(camera, renderer.domElement);
