@@ -21,8 +21,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
     <script type="module">
-        // main.js
-        let scene, camera, renderer, model;
+        let scene, camera, renderer, model, controls;
         import { OrbitControls } from 'https://cdn.jsdelivr.net/npm/three@0.124/examples/jsm/controls/OrbitControls.js';
 
         function init() {
@@ -50,7 +49,7 @@
                 console.error('Error loading GLB model:', error);
             });
 
-            const controls = new OrbitControls(camera, renderer.domElement);
+             controls = new OrbitControls(camera, renderer.domElement);
             controls.keys = {
                 LEFT: 'ArrowLeft', //left arrow
                 UP: 'ArrowUp', // up arrow
