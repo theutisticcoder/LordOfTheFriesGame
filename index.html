@@ -21,7 +21,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
     <script type="module">
-        let scene, camera, renderer, model, controls;
+        let scene, camera, renderer, model, controls, modelbox;
         import { OrbitControls } from 'https://cdn.jsdelivr.net/npm/three@0.124/examples/jsm/controls/OrbitControls.js';
 
         function init() {
@@ -56,6 +56,8 @@
                 RIGHT: 'ArrowRight', // right arrow
                 BOTTOM: 'ArrowDown' // down arrow
             }
+            model.geometry.computeBoundingBox();
+            modelbox = new THREE.Box3().setFromObject(model);
 
             // Optional: Orbit controls
             // const controls = new THREE.OrbitControls(camera, renderer.domElement);
@@ -83,15 +85,32 @@
             switch (event.keyCode) {
                 case 87: // W
                     camera.position.z += 0.1;
+                     if (modelbox.containsPoint(camera.position)) {
+                        camera.position.z -= 0.1;
+                        return;
+                    }
                     break;
                 case 65: // A
                     camera.position.x += 0.1;
+                     if (modelbox.containsPoint(camera.position)) {
+                        camera.position.x -= 0.1;
+                        return;
+                    }
                     break;
                 case 83: // S
                     camera.position.z -= 0.1;
+                    if (modelbox.containsPoint(camera.position)) {
+                        camera.position.z += 0.1;
+                        return;
+                    }
                     break;
                 case 68: // D
+
                     camera.position.x -= 0.1;
+                    if (modelbox.containsPoint(camera.position)) {
+                        camera.position.x += 0.1;
+                        return;
+                    }
                     break;
             }
         });
