@@ -3,6 +3,7 @@
 
 <head>
     <title>Lord Of The Fries</title>
+    <script type="module" src="https://konsumer.js.org/raylib-wasm/raylib/raylib.js"></script>
     <style>
         body {
             margin: 0;
@@ -16,107 +17,28 @@
 </head>
 
 <body>
-    <div id="container"></div>
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
-    <script type="module">
-        let scene, camera, renderer, model, controls, modelbox;
-        import { OrbitControls } from 'https://cdn.jsdelivr.net/npm/three@0.124/examples/jsm/controls/OrbitControls.js';
-
-        function init() {
-            scene = new THREE.Scene();
-            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-            renderer = new THREE.WebGLRenderer({ antialias: true });
-            renderer.setSize(window.innerWidth, window.innerHeight);
-            document.getElementById('container').appendChild(renderer.domElement);
-
-            // Add lights
-            const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
-            scene.add(ambientLight);
-            const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
-            directionalLight.position.set(0, 1, 1);
-            scene.add(directionalLight);
-
-            // Load GLB model
-            const loader = new THREE.GLTFLoader();
-            loader.load('abandoned_mcdonalds.glb', (gltf) => {
-                model = gltf.scene;
-                model.scale.set(10, 10, 10);
-                model.position.set(0, 0, 2)
-                scene.add(model);
-            }, undefined, (error) => {
-                console.error('Error loading GLB model:', error);
-            });
-
-            controls = new OrbitControls(camera, model);
-            controls.keys = {
-                LEFT: 'ArrowLeft', //left arrow
-                UP: 'ArrowUp', // up arrow
-                RIGHT: 'ArrowRight', // right arrow
-                BOTTOM: 'ArrowDown' // down arrow
-            }
-            renderer.domElement.geometry.computeBoundingBox();
-            modelbox = new THREE.Box3().setFromObject(renderer.domElement);
-
-            // Optional: Orbit controls
-            // const controls = new THREE.OrbitControls(camera, renderer.domElement);
-            controls.update();
-
-            animate();
+    <raylib-game>
+        let model, camera;
+        Camera3D camera = { 0 };
+        camera.position = (Vector3){ 0.0f, 10.0f, 10.0f }; // Camera position
+        camera.target = (Vector3){ 0.0f, 0.0f, 0.0f }; // Camera looking at point
+        camera.up = (Vector3){ 0.0f, 1.0f, 0.0f }; // Camera up vector (rotation towards target)
+        camera.fovy = 45.0f; // Camera field-of-view Y
+        camera.projection = CAMERA_PERSPECTIVE;
+        const InitGame = async () => {
+        InitWindow(800, 450)
+        Model model = LoadModel("./abandoned_mcdonalds.glb")
         }
 
-        function animate() {
-            requestAnimationFrame(animate);
-            // Update model animations or custom logic here
-            controls.update();
-
-            renderer.render(scene, camera);
+        const UpdateGame = (ts) => {
+        BeginDrawing()
+        ClearBackground(RED)
+        BeginMode3D(camera)
+        EndMode3D()
+        DrawFPS(10, 10)
+        EndDrawing()
         }
-
-        function onWindowResize() {
-            camera.aspect = window.innerWidth / window.innerHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(window.innerWidth, window.innerHeight);
-        }
-
-        window.addEventListener('resize', onWindowResize);
-        document.addEventListener('keydown', function (event) {
-            switch (event.keyCode) {
-                case 87: // W
-                    camera.position.z += 0.1;
-                     if (modelbox.containsPoint(camera.position)) {
-                        camera.position.z -= 0.1;
-                        return;
-                    }
-                    break;
-                case 65: // A
-                    camera.position.x += 0.1;
-                     if (modelbox.containsPoint(camera.position)) {
-                        camera.position.x -= 0.1;
-                        return;
-                    }
-                    break;
-                case 83: // S
-                    camera.position.z -= 0.1;
-                    if (modelbox.containsPoint(camera.position)) {
-                        camera.position.z += 0.1;
-                        return;
-                    }
-                    break;
-                case 68: // D
-
-                    camera.position.x -= 0.1;
-                    if (modelbox.containsPoint(camera.position)) {
-                        camera.position.x += 0.1;
-                        return;
-                    }
-                    break;
-            }
-        });
-        init();
-
-    </script> <!-- Your custom JavaScript -->
+    </raylib-game>
 </body>
 
 </html>
