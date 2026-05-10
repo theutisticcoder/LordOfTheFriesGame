@@ -14,33 +14,61 @@
             display: block;
         }
     </style>
+    <script src="https://unpkg.com/raylib-js/dist/raylib.js"></script>
 </head>
 
 <body>
-    <raylib-game>
-        let model, camera;
-        const InitGame = async () => {
-        camera = { 0 };
-        camera.position = { 0, 10, 10 }; // Camera position
-        camera.target = { 0, 0, 0 }; // Camera looking at point
-        camera.up = { 0, 1, 0 }; // Camera up vector (rotation towards target)
-        camera.fovy = 45; // Camera field-of-view Y
-        camera.projection = CAMERA_PERSPECTIVE;
-        InitWindow(800, 450)
-        model = LoadModel("./abandoned_mcdonalds.glb")
-        }
+    <script>
+        async function run() {
+            const r = await raylib();
 
-        const UpdateGame = (ts) => {
-        UpdateCamera(&camera, CAMERA_FIRST_PERSON);
-        BeginDrawing()
-        ClearBackground(RED)
-        BeginMode3D(camera);
-        DrawModel(model, {0,0,0}, 1, BLACK)
-        EndMode3D()
-        DrawFPS(10, 10)
-        EndDrawing()
+
+            // 1. Initialize Window
+            const screenWidth = 800;
+            const screenHeight = 450;
+            r.InitWindow(screenWidth, screenHeight, "Raylib Node.js - Model Loading");
+
+            // 2. Define the Camera
+            // In node-raylib, we pass an object that matches the Camera3D struct
+            const camera = {
+                position: { x: 0, y: 10, z: 10 },
+                target: { x: 0, y: 0, z: 0 },
+                up: { x: 0, y: 1, z: 0 },
+                fovy: 45,
+                projection: r.CAMERA_PERSPECTIVE
+            };
+
+            // 3. Load the Model
+            // Ensure the path is correct relative to where you run 'node index.js'
+            const model = r.LoadModel("./abandoned_mcdonalds.glb");
+
+            r.SetTargetFPS(60);
+
+            // 4. Main Game Loop
+            while (!r.WindowShouldClose()) {
+                // Update
+                // Note: UpdateCamera in node-raylib takes the camera object and returns the updated one
+                r.UpdateCamera(camera, r.CAMERA_FIRST_PERSON);
+
+                // Draw
+                r.BeginDrawing();
+                r.ClearBackground(r.RED);
+
+                r.BeginMode3D(camera);
+                // DrawModel(model, position, scale, tint)
+                r.DrawModel(model, { x: 0, y: 0, z: 0 }, 250.0, r.WHITE);
+                r.EndMode3D();
+
+                r.DrawFPS(10, 10);
+                r.EndDrawing();
+            }
+
+            // 5. De-Initialization
+            r.UnloadModel(model);
+            r.CloseWindow();
         }
-    </raylib-game>
+        run();
+    </script>
 </body>
 
 </html>
